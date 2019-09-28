@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <canvas style="width: 200px;height:200px" id="canvas"></canvas>
+  <script>
+    /** @type {HTMLCanvasElement} */
+    var canvas = document.querySelector("#canvas"),
+      context = canvas.getContext('2d');
+
+
+    // context.shadowColor = 'red'
+    // context.shadowOffsetX = 0
+    // context.shadowOffsetY = 0
+    // context.shadowBlur = 20
+    // context.fillRect(0, 0, canvas.width, canvas.height)
+    // context.strokeStyle = "green";
+    // context.strokeRect = "blue";
+    // context.fillStyle = 'red'
+
+    context.shadowColor = "green";
+    context.shadowOffsetX = 0;
+    context.shadowOffsetY = 10;
+    context.shadowBlur = 20;
+    context.fillStyle = 'red'
+    context.fillRect(10, 10, 100, 100)
+    context.fillText("Blur Canvas", 40, 80);
+    // context.strokeStyle = "RGBA(0, 255, 0, 1)";
+    // context.lineWidth = 2;
+    // context.strokeRect(10, 10, 100, 100);
+
+  </script>
+</body>
+
+</html>
