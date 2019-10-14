@@ -31,15 +31,20 @@
     }
     const randomColor = ['#7840e6', '#ea65e6', '#57c8f3', '#57f36a', '#4b9020']
 
-    function Ball(x, y, radius) {
+    const maxWidth = window.innerWidth
+    const maxHeight = window.innerHeight
+
+
+
+    function Ball(x, y, dY, dX, radius, speed, color) {
       this.x = x
       this.y = y
-      this.dY = 1
-      this.dX = 1
+      this.dY = dY
+      this.dX = dX
       this.radius = radius
-      const random = getRandom(4, 0)
-      ctx.fillStyle = randomColor[random]
+      ctx.fillStyle = color
 
+      console.log(color)
       this.update = function () {
         ctx.beginPath()
 
@@ -53,9 +58,9 @@
           this.dY = 1
         }
         if (this.dY > 0) {
-          this.y += 10
+          this.y += speed
         } else {
-          this.y -= 10
+          this.y -= speed
         }
 
         if ((this.x + this.radius) > canvas.width) {
@@ -65,9 +70,9 @@
           this.dX = 1
         }
         if (this.dX > 0) {
-          this.x += 10
+          this.x += speed
         } else {
-          this.x -= 10
+          this.x -= speed
         }
 
         ctx.arc(this.x, this.y, this.radius, 2 * Math.PI, false)
@@ -78,8 +83,23 @@
       }
     }
 
-    ball = new Ball(100, 100, 20)
+    const ballList = []
+    const list = [-1, 1]
+    for (var i = 0; i < 100; i++) {
+      const locX = getRandom(window.innerWidth, 0)
+      const locY = getRandom(window.innerHeight, 0)
+      const radiusX = getRandom(20, 0)
+      const speed = getRandom(20, 2)
+      const random = getRandom(4, 0)
+      const color = randomColor[random]
+      const dX = list[getRandom(1, 0)]
+      const dY = list[getRandom(1, 0)]
+      console.log(locX, locY, dX, dY, radiusX, speed, color)
+      const ball = new Ball(locX, locY, dX, dY, radiusX, speed, color)
+      ballList.push(ball)
 
+    }
+    // console.log(ballList)
 
 
     function animation() {
@@ -87,8 +107,10 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       requestAnimationFrame(animation)
+      ballList.map(item => {
+        item.update()
+      })
 
-      ball.update()
     }
     animation()
   </script>
