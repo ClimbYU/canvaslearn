@@ -109,6 +109,12 @@
 
     }
     animation()
+
+    window.addEventListener('mousemove', function (e) {
+      const { x, y, pageX, pageY, clientX, clientY } = e
+      console.log(x, y, pageX, pageY, clientX, clientY)
+
+    })
   </script>
 </body>
 
