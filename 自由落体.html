@@ -34,7 +34,8 @@
 
     const maxWidth = window.innerWidth
     const maxHeight = window.innerHeight
-
+    let hoop;
+    let count = []
 
 
     function Ball(x, y, dY, dX, radius, speed, color, frame) {
@@ -44,6 +45,8 @@
       this.dY = dY
       this.dX = dX
       this.radius = radius
+      this.lastX
+      this.lastY
 
       this.update = function () {
         ctx.beginPath()
@@ -55,7 +58,7 @@
 
         if ((this.y + this.radius) > canvas.height) {
           this.dY = -1;
-          speedX = getRandom(1, -1);
+          speedX = getRandom(3, -3);
         } else if (speed <= 0) {
           speed = 0
           this.dY = 1
@@ -81,12 +84,21 @@
           } else if (this.x < 0) {
 
             speedX = 0
-            this.x += speedX
+
           } else {
             this.x += speedX
           }
         }
+        if (((this.y + this.radius) >= canvas.height) && speed == 0 && count.indexOf(this) < 0) {
 
+          count.push(this)
+        }
+        if (count.length >= num) {
+          window.cancelAnimationFrame(hoop)
+        }
+
+        this.lastX = this.x
+        this.lastY = this.y
         ctx.arc(this.x, this.y, this.radius, 2 * Math.PI, false)
 
 
@@ -96,7 +108,8 @@
 
     let ballList = []
     const list = [-1, 1]
-    for (var i = 0; i < 100; i++) {
+    const num = 150
+    for (var i = 0; i < num; i++) {
       const locX = getRandom(canvas.width, 0)
       const locY = getRandom(200, 0)
       const radiusX = getRandom(25, 10)
@@ -113,7 +126,7 @@
 
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      requestAnimationFrame(animation)
+      hoop = requestAnimationFrame(animation)
       ballList.map(item => {
         item.update()
       })
@@ -126,9 +139,26 @@
       canvas.height = window.innerHeight;
 
       ctx = canvas.getContext("2d")
+
     })
     document.addEventListener('click', function () {
-      console.log(333)
+      if (count.length >= num) {
+
+        count = []
+        ballList = []
+        for (var i = 0; i < num; i++) {
+          const locX = getRandom(canvas.width, 0)
+          const locY = getRandom(200, 0)
+          const radiusX = getRandom(25, 10)
+          const random = getRandom(9, 0)
+          const color = randomColor[random]
+          const dX = list[getRandom(1, 0)]
+          const ball = new Ball(locX, locY, 1, dX, radiusX, 0, color, 2, true)
+          ballList.push(ball)
+
+        }
+        animation()
+      }
     })
   </script>
 </body>
