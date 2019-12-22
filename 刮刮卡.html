@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>canvas实现刮刮卡</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    .box {
+      position: relative;
+    }
+
+    #content {
+      width: 200px;
+      height: 200px;
+      background-color: aqua;
+    }
+
+    #canvas {
+      position: absolute;
+      top: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <!-- <div id="content"></div> -->
+    <canvas id="canvas" width="200" height="200"></canvas>
+  </div>
+  <script>
+    // const content = document.querySelector("#content")
+    const canvas = document.querySelector("#canvas")
+    const ctx = canvas.getContext('2d')
+    ctx.save()
+    ctx.fillStyle = "rgb(200,0,0)";
+    ctx.fillRect(0, 0, 200, 200);
+    ctx.restore()
+    let mousedown = false
+    canvas.addEventListener('mousedown', function (e) {
+      mousedown = true
+      const { x, y } = e
+      // ctx.lineWidth = 8
+      ctx.beginPath()
+      ctx.moveTo(x, y)
+    })
+    canvas.addEventListener('mousemove', function (e) {
+      if (mousedown) {
+        const { x, y } = e
+        ctx.globalCompositeOperation = 'destination-out'
+
+
+        // ctx.lineTo(x, y)
+        // ctx.stroke()
+
+        ctx.beginPath()
+        ctx.arc(x, y, 10, 0, 2 * Math.PI);
+        ctx.fill();
+        let clearCount = 0;
+        const { data } = ctx.getImageData(0, 0, 200, 200);
+        for (let i = 0; i < data.length; i += 4) {
+          if (data[i + 3] <= 128) { // 小于128透明
+
+            clearCount++;
+          }
+        }
+        console.log(clearCount / (data.length / 4) * 100)
+      }
+    })
+    canvas.addEventListener('mouseup', function () {
+      mousedown = false
+    })
+  </script>
+</body>
+
+</html>

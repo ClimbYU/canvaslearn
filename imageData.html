@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>imageData</title>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+
+  <canvas id='zoom'></canvas>
+  <div id="color"></div>
+
+  <div id='smoothbtn' style="width: 100px;height: 100px;"></div>
+  <script>
+    // var img = new Image();
+    // img.src = 'https://mdn.mozillademos.org/files/5397/rhino.jpg';
+    // var canvas = document.getElementById('canvas');
+    // var ctx = canvas.getContext('2d');
+    // img.onload = function () {
+    //   ctx.drawImage(img, 0, 0);
+    //   img.style.display = 'none';
+    // };
+    // var color = document.getElementById('color');
+    // function pick(event) {
+    //   var x = event.layerX;
+    //   var y = event.layerY;
+    //   var pixel = ctx.getImageData(x, y, 1, 1);
+    //   var data = pixel.data;
+    //   var rgba = 'rgba(' + data[0] + ',' + data[1] +
+    //     ',' + data[2] + ',' + (data[3] / 255) + ')';
+    //   color.style.background = rgba;
+    //   color.textContent = rgba;
+    // }
+    // canvas.addEventListener('mousemove', pick);
+
+
+    var img = new Image();
+    img.src = 'https://mdn.mozillademos.org/files/5397/rhino.jpg';
+    img.onload = function () {
+      draw(this);
+    };
+
+    function draw(img) {
+      var canvas = document.getElementById('canvas');
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      img.style.display = 'none';
+      var zoomctx = document.getElementById('zoom').getContext('2d');
+
+      var smoothbtn = document.getElementById('smoothbtn');
+      var toggleSmoothing = function (event) {
+        zoomctx.imageSmoothingEnabled = this.checked;
+        zoomctx.mozImageSmoothingEnabled = this.checked;
+        zoomctx.webkitImageSmoothingEnabled = this.checked;
+        zoomctx.msImageSmoothingEnabled = this.checked;
+      };
+      smoothbtn.addEventListener('change', toggleSmoothing);
+
+      var zoom = function (event) {
+        var x = event.layerX + 10;
+        var y = event.layerY + 10;
+        zoomctx.drawImage(canvas,
+          Math.abs(x - 5),
+          Math.abs(y - 5),
+          10, 10,
+          0, 0,
+          100, 100);
+      };
+
+      canvas.addEventListener('mousemove', zoom);
+    }
+  </script>
+</body>
+
+</html>
