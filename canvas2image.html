@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <div style=" border:1px solid red;width: 663px;height: 450px;margin-right:35px;background: url(./test2.jpg) no-repeat;
+      background-size: contain;">
+    </div>
+    <!-- <canvas id='canvas'></canvas> -->
+    <img id='img'>
+    <div style="width: 663px;height: 450px;border: 1px solid red;"></div>
+
+  </div>
+  <script>
+    const imageEle = document.getElementById('img')
+
+    const image = new Image()
+    image.src = './test2.jpg'
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d')
+
+    function dataURLtoBlob(dataurl) {
+      var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new Blob([u8arr], { type: mime });
+    }
+
+
+    function blobToDataURL(blob, callback) {
+      let a = new FileReader();
+      a.onload = function (e) { callback(e.target.result); }
+      a.readAsDataURL(blob);
+    }
+
+    // image.setAttribute("crossOrigin", 'Anonymous')
+    image.onload = function () {
+      // 生成base64
+      const { width, height } = image;
+      canvas.height = height;
+      canvas.width = width
+      ctx.drawImage(image, 0, 0)
+      const src = canvas.toDataURL();
+      // console.log(img.width, img.height)
+
+      const img1 = new Image()
+      img1.src = src
+      img1.onload = function () {
+        const { width, height } = img1;
+
+        let drawWidth = ''
+        let drawHeight = ''
+        const imageMax = Math.max(width, height)
+        const imageMin = Math.min(width, height)
+        // const containerMax = Math.max(width, height)
+        // const containerMin = Math.min(width,height)
+        // if (imageMax < 630) {
+        //   drawHeight = 150;
+        //   drawWidth = width * 150 / height
+        // } else if (imageMax >= 630) {
+
+        // }
+
+        const tmpSize = 663 * imageMin / imageMax
+        if (tmpSize <= 570) {
+          drawWidth = 663;
+          drawHeight = tmpSize
+        } else {
+          drawHeight = 570;
+          drawWidth = drawHeight * width / height
+        }
+
+
+
+        const tmp = document.createElement('canvas');
+        const ctxTmp = tmp.getContext('2d');
+        tmp.width = drawWidth;
+        tmp.height = drawHeight;
+        ctxTmp.drawImage(img1, 0, 0, drawWidth, drawHeight);
+        const src = tmp.toDataURL();
+        imageEle.src = src
+        const blob = dataURLtoBlob(src)
+        console.log(src.length)
+        console.log(blob)
+
+        blobToDataURL(blob, function (e) {
+          // console.log('blobToDataURL', e)
+        })
+
+      }
+
+
+    }
+  </script>
+</body>
+
+</html>
